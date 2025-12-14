@@ -1,0 +1,15 @@
+.env
+*/bin/**
+*/obj/**
+.config/**
+.vs/**
+/.idea/**
+/ClubDoorman.sln.DotSettings.user
+ClubDoorman/ClubDoorman.csproj.user
+
+ClubDoorman/data/app*
+ClubDoorman/data/spam-ham.txt
+ClubDoorman/data/stop-regex.txt 
+ClubDoorman/data/stop-words.txt
+
+.DS_Store
