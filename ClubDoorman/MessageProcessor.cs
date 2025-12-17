@@ -431,7 +431,7 @@ internal class MessageProcessor
                     _logger.LogDebug("It's a reply to recent post, high alert");
                 var delete = attention.Probability >= Consts.LlmHighProbability || replyToRecentPost;
 
-                var action = delete ? "Даём ридонли на 60 минут; " : "";
+                var action = delete ? "Даём ридонли на 1 день; " : "";
                 var at = user.Username == null ? "" : $" @{user.Username} ";
                 await _bot.SendMessage(
                     admChat,
@@ -448,7 +448,7 @@ internal class MessageProcessor
                         chat,
                         user.Id,
                         new ChatPermissions(false),
-                        untilDate: DateTime.UtcNow.AddMinutes(60),
+                        untilDate: DateTime.UtcNow.AddMinutes(1440),
                         cancellationToken: stoppingToken
                     );
                 }
@@ -622,12 +622,12 @@ internal class MessageProcessor
         try
         {
             await _bot.DeleteMessage(message.Chat.Id, message.MessageId, cancellationToken: stoppingToken);
-            deletionMessagePart += ", сообщение удалено. Юзеру дали read-only на 60 минут";
+            deletionMessagePart += ", сообщение удалено. Юзеру дали read-only на 1 день";
             await _bot.RestrictChatMember(
                 message.Chat.Id,
                 user!.Id,
                 new ChatPermissions(false),
-                untilDate: DateTime.UtcNow.AddMinutes(60),
+                untilDate: DateTime.UtcNow.AddMinutes(1440),
                 cancellationToken: stoppingToken
             );
         }
