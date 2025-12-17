@@ -88,6 +88,7 @@ internal class AdminCommandHandler
                                 replyParameters: cb.Message?.MessageId
                             );
                         }
+                        break;
                         // await DeleteAllRecentFrom(chatId, userId);
                     }
                     break;
@@ -136,6 +137,7 @@ internal class AdminCommandHandler
                                 replyParameters: cb.Message?.MessageId
                             );
                         }
+                        break;
                         // await DeleteAllRecentFrom(chatId, userId);
                     }
                 case "banchan":
@@ -161,6 +163,7 @@ internal class AdminCommandHandler
                                 replyParameters: cb.Message?.MessageId
                             );
                         }
+                        break;
                         // await DeleteAllRecentFrom(chatId, fromChannelId);
                     }
                     break;
