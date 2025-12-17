@@ -75,7 +75,7 @@ internal class AdminCommandHandler
                             await _bot.BanChatMember(chatId, userId);
                             await _bot.SendMessage(
                                 admChat,
-                                $"{Utils.FullName(cb.From)} забанил, сообщение добавлено в список авто-бана",
+                                $"{Utils.FullName(cb.From)} забанил, больше этот некто вас не побеспокоит",
                                 replyParameters: cb.Message?.MessageId
                             );
                         }
@@ -150,7 +150,7 @@ internal class AdminCommandHandler
                             await _bot.BanChatSenderChat(chatId, fromChannelId);
                             await _bot.SendMessage(
                                 admChat,
-                                $"{Utils.FullName(cb.From)} забанил, сообщение добавлено в список авто-бана",
+                                $"{Utils.FullName(cb.From)} забанил, больше этот канал вас не побеспокоит",
                                 replyParameters: cb.Message?.MessageId
                             );
                         }

@@ -668,7 +668,7 @@ internal class MessageProcessor
             admChat,
             $"{deletionMessagePart}{Environment.NewLine}{Environment.NewLine}Юзер {Utils.FullName(user)}{username} из чата {message.Chat.Title}:{Environment.NewLine}{postLink}{reply}{Environment.NewLine}",
             replyParameters: forward!,
-            replyMarkup: new InlineKeyboardMarkup(row),
+            replyMarkup: new InlineKeyboardMarkup(rows),
             cancellationToken: stoppingToken
         );
     }
