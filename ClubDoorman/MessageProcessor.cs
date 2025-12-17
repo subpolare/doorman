@@ -646,20 +646,19 @@ internal class MessageProcessor
         // if (message.ReplyToMessage != null)
         //     reply = $"{Environment.NewLine}реплай на {Utils.LinkToMessage(message.Chat, message.ReplyToMessage.MessageId)}";
 
-        var row = new List<InlineKeyboardButton[]>
+        var rows = new List<InlineKeyboardButton[]>
         {
             new[]
             {
                 new InlineKeyboardButton(Consts.BanButton) { CallbackData = callbackDataBan },
-                new InlineKeyboardButton(Consts.OkButton) { CallbackData = "noop" },
+                new InlineKeyboardButton(Consts.OkButton)  { CallbackData = "noop" },
             }
         };
         if (_config.ApproveButtonEnabled)
         {
             rows.Add(new[]
             {
-                
-                new InlineKeyboardButton("🥰 Approve") { CallbackData = $"approve_{user.Id}" },
+                new InlineKeyboardButton("🥰 Approve")   { CallbackData = $"approve_{user.Id}" },
                 new InlineKeyboardButton("🤫 Read-only") { CallbackData = $"mute_{message.Chat.Id}_{user.Id}" },
             });
         }
