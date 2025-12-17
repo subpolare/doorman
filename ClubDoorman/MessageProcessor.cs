@@ -651,14 +651,16 @@ internal class MessageProcessor
             new[]
             {
                 new InlineKeyboardButton(Consts.BanButton) { CallbackData = callbackDataBan },
-                new InlineKeyboardButton(Consts.OkButton)  { CallbackData = "noop" },
+                new InlineKeyboardButton(Consts.OkButton) { CallbackData = "noop" },
             }
         };
         if (_config.ApproveButtonEnabled)
         {
             rows.Add(new[]
             {
-                row.Add(new InlineKeyboardButton("🥰 Approve") { CallbackData = $"approve_{user.Id}" });
+                
+                new InlineKeyboardButton("🥰 Approve") { CallbackData = $"approve_{user.Id}" },
+                new InlineKeyboardButton("🤫 Read-only") { CallbackData = $"mute_{message.Chat.Id}_{user.Id}" },
             });
         }
 

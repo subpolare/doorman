@@ -61,7 +61,7 @@ internal class AdminCommandHandler
                     await _aiChecks.MarkUserOkay(attOkUserId);
                     await _bot.SendMessage(
                         admChat,
-                        $"{Utils.FullName(cb.From)} добавил пользователя в список тех чей профиль не в блеклисте (но ТЕКСТЫ его сообщений всё ещё проверяются)",
+                        $"{Utils.FullName(cb.From)} добавил пользователя в список тех, чей профиль не в блеклисте (но ТЕКСТЫ его сообщений всё ещё проверяются)",
                         replyParameters: cb.Message?.MessageId
                     );
                     break;
@@ -91,6 +91,53 @@ internal class AdminCommandHandler
                         await DeleteAllRecentFrom(chatId, userId);
                     }
                     break;
+                case "mute": 
+                    {
+                        if (split.Count < 3 || !long.TryParse(split[1], out var chatId) || !long.TryParse(split[2], out var userId))
+                            return;
+                        try
+                        {
+                            _logger.LogDebug("Someone pressed button to read-only chat {ChatId} user {UserId}", chatId, userId);
+                            var perms = new ChatPermissions
+                            {
+                                CanSendMessages = false,
+                                CanSendAudios = false,
+                                CanSendDocuments = false,
+                                CanSendPhotos = false,
+                                CanSendVideos = false,
+                                CanSendVideoNotes = false,
+                                CanSendVoiceNotes = false,
+                                CanSendPolls = false,
+                                CanSendOtherMessages = false,
+                                CanAddWebPagePreviews = false,
+                                CanChangeInfo = false,
+                                CanInviteUsers = false,
+                                CanPinMessages = false,
+                                CanManageTopics = false,
+                            };
+                            await _bot.RestrictChatMember(
+                                chatId: chatId,
+                                userId: userId,
+                                permissions: perms,
+                                useIndependentChatPermissions: true
+                            )
+                            await _bot.SendMessage(
+                                admChat,
+                                $"Выдал пользователю read-only. Надеюсь, он расстроился",
+                                replyParameters: cb.Message?.MessageId
+                            )
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogWarning(e, "Unable to make read-only");
+                            await _bot.SendMessage(
+                                admChat,
+                                $"Не могу выдать read-only. Что-то не так... Сделайте это руками",
+                                replyParameters: cb.Message?.MessageId
+                            );
+                        }
+                        await DeleteAllRecentFrom(chatId, fromChannelId);
+                    }
                 case "banchan":
                     {
                         if (split.Count < 3 || !long.TryParse(split[1], out var chatId) || !long.TryParse(split[2], out var fromChannelId))
