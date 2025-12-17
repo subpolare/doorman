@@ -88,7 +88,7 @@ internal class AdminCommandHandler
                                 replyParameters: cb.Message?.MessageId
                             );
                         }
-                        await DeleteAllRecentFrom(chatId, userId);
+                        // await DeleteAllRecentFrom(chatId, userId);
                     }
                     break;
                 case "mute": 
@@ -120,12 +120,12 @@ internal class AdminCommandHandler
                                 userId: userId,
                                 permissions: perms,
                                 useIndependentChatPermissions: true
-                            )
+                            );
                             await _bot.SendMessage(
                                 admChat,
                                 $"Выдал пользователю read-only. Надеюсь, он расстроился",
                                 replyParameters: cb.Message?.MessageId
-                            )
+                            );
                         }
                         catch (Exception e)
                         {
@@ -136,7 +136,7 @@ internal class AdminCommandHandler
                                 replyParameters: cb.Message?.MessageId
                             );
                         }
-                        await DeleteAllRecentFrom(chatId, fromChannelId);
+                        // await DeleteAllRecentFrom(chatId, userId);
                     }
                 case "banchan":
                     {
@@ -161,7 +161,7 @@ internal class AdminCommandHandler
                                 replyParameters: cb.Message?.MessageId
                             );
                         }
-                        await DeleteAllRecentFrom(chatId, fromChannelId);
+                        // await DeleteAllRecentFrom(chatId, fromChannelId);
                     }
                     break;
             }
