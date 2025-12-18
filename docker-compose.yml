@@ -1,6 +1,5 @@
 services:
   doorman:
-    # image: ghcr.io/tiraelsedai/clubdoorman:latest
     build: .
     container_name: doorman
     environment:
