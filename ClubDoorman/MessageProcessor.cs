@@ -351,7 +351,7 @@ internal class MessageProcessor
         var (spam, score) = await _classifier.IsSpam(normalized);
         if (spam)
         {
-            var reason = $"AI решил что это спам, скор {score}";
+            var reason = $"AI решил, что это спам (score: {score})";
             if (score > 3 && _config.HighConfidenceAutoBan)
             {
                 await AutoBan(message, reason, stoppingToken);
@@ -651,7 +651,7 @@ internal class MessageProcessor
             new[]
             {
                 new InlineKeyboardButton(Consts.BanButton) { CallbackData = callbackDataBan },
-                new InlineKeyboardButton(Consts.OkButton)  { CallbackData = "noop" },
+                new InlineKeyboardButton(Consts.OkButton)  { CallbackData = $"attOk_{message.Chat.Id}_{user.Id}" }, 
             }
         };
         if (_config.ApproveButtonEnabled)
@@ -659,7 +659,7 @@ internal class MessageProcessor
             rows.Add(new[]
             {
                 new InlineKeyboardButton("🥰 Approve")   { CallbackData = $"approve_{user.Id}" },
-                new InlineKeyboardButton("🤫 Read-only") { CallbackData = $"mute_{message.Chat.Id}_{user.Id}" },
+                new InlineKeyboardButton("💤 Read-only") { CallbackData = $"mute_{message.Chat.Id}_{user.Id}" },
             });
         }
 
