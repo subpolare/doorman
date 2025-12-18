@@ -44,6 +44,7 @@ public class Program
                     services.AddSingleton<UserManager>();
                     services.AddSingleton<AdminCommandHandler>();
                     services.AddSingleton<ReactionHandler>();
+                    services.AddSingleton<BotUserProvider>();
                     services.AddSingleton<BadMessageManager>();
                     services.AddSingleton<AiChecks>();
                     services.AddSingleton<RecentMessagesStorage>();

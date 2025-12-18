@@ -14,7 +14,7 @@ internal class AdminCommandHandler
     private readonly AiChecks _aiChecks;
     private readonly RecentMessagesStorage _recentMessagesStorage;
     private readonly ILogger<AdminCommandHandler> _logger;
-    private User? _me;
+    private readonly BotUserProvider _botUserProvider;
 
     public AdminCommandHandler(
         ITelegramBotClient bot,
@@ -24,7 +24,8 @@ internal class AdminCommandHandler
         Config config,
         AiChecks aiChecks,
         RecentMessagesStorage recentMessagesStorage,
-        ILogger<AdminCommandHandler> logger
+        ILogger<AdminCommandHandler> logger,
+        BotUserProvider botUserProvider
     )
     {
         _bot = bot;
@@ -35,6 +36,7 @@ internal class AdminCommandHandler
         _aiChecks = aiChecks;
         _recentMessagesStorage = recentMessagesStorage;
         _logger = logger;
+        _botUserProvider = botUserProvider;
     }
 
     public async Task HandleAdminCallback(string cbData, CallbackQuery cb)
@@ -233,8 +235,7 @@ internal class AdminCommandHandler
 
     public async Task AdminChatMessage(Message message)
     {
-        // TODO: this is not ideal, share getter with MessageProcessor
-        _me ??= await _bot.GetMe();
+        var me = await _botUserProvider.GetMeAsync();
         if (message.Text != null && message.Text.StartsWith("/unban"))
         {
             var split = message.Text.Split(' ');
@@ -248,7 +249,7 @@ internal class AdminCommandHandler
 
         if (message is { ReplyToMessage: { } replyToMessage, Text: "/spam" or "/ham" or "/check" })
         {
-            if (replyToMessage.From?.Id == _me.Id && replyToMessage.ForwardDate == null)
+            if (replyToMessage.From?.Id == me.Id && replyToMessage.ForwardDate == null)
             {
                 await _bot.SendMessage(
                     message.Chat.Id,

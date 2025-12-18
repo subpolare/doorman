@@ -18,6 +18,20 @@ internal class Config
         MultiAdminChatMap = new Dictionary<long, long>().ToFrozenDictionary();
         _ = InitMultiAdminChatMap();
         ChannelsCheckExclusionChats = GetChannelsCheckExclusionChats();
+
+        var ids = Environment.GetEnvironmentVariable("ID");
+        var list = new List<long>();
+        if (!string.IsNullOrWhiteSpace(ids))
+        {
+            foreach (var item in ids.Split(','))
+                if (long.TryParse(item.Trim(), out var id)) list.Add(id);
+        }
+        AllowedChats = list.ToFrozenSet();
+    }
+
+    public bool IsAllowedChat(long chatId)
+    {
+        return AllowedChats.Count == 0 || AllowedChats.Contains(chatId);
     }
 
     public bool BlacklistAutoBan { get; } = !GetEnvironmentBool("DOORMAN_BLACKLIST_AUTOBAN_DISABLE");

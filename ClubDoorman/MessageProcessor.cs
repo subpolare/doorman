@@ -23,7 +23,7 @@ internal class MessageProcessor
     private readonly ReactionHandler _reactionHandler;
     private readonly AdminCommandHandler _adminCommandHandler;
     private readonly RecentMessagesStorage _recentMessagesStorage;
-    private User? _me;
+    private readonly BotUserProvider _botUserProvider;
 
     public MessageProcessor(
         ITelegramBotClient bot,
@@ -37,7 +37,8 @@ internal class MessageProcessor
         Config config,
         ReactionHandler reactionHandler,
         AdminCommandHandler adminCommandHandler,
-        RecentMessagesStorage recentMessagesStorage
+        RecentMessagesStorage recentMessagesStorage,
+        BotUserProvider botUserProvider
     )
     {
         _bot = bot;
@@ -52,13 +53,13 @@ internal class MessageProcessor
         _reactionHandler = reactionHandler;
         _adminCommandHandler = adminCommandHandler;
         _recentMessagesStorage = recentMessagesStorage;
+        _botUserProvider = botUserProvider;
     }
 
     public async Task HandleUpdate(Update update, CancellationToken stoppingToken)
     {
         using var logScope = _logger.BeginScope("Update Id = {Id}", update.Id);
-        // TODO: this is not ideal, share getter with AdminCommandHandler
-        _me ??= await _bot.GetMe(cancellationToken: stoppingToken);
+        var me = await _botUserProvider.GetMeAsync(stoppingToken);
         if (update.MessageReaction != null)
         {
             await _reactionHandler.HandleReaction(update.MessageReaction);
@@ -79,7 +80,7 @@ internal class MessageProcessor
         }
         if (update.ChatMember != null)
         {
-            if (update.ChatMember.From.Id == _me.Id)
+            if (update.ChatMember.From.Id == me.Id)
                 return;
             await HandleChatMemberUpdated(update);
             return;
@@ -98,6 +99,10 @@ internal class MessageProcessor
                 replyParameters: message,
                 cancellationToken: stoppingToken
             );
+            return;
+        }
+        if (!_config.IsAllowedChat(chat.Id) && chat.Id != _config.AdminChatId && !_config.MultiAdminChatMap.Values.Contains(chat.Id))
+        {
             return;
         }
         if (message.NewChatMembers != null && chat.Id != _config.AdminChatId && !_config.MultiAdminChatMap.Values.Contains(chat.Id))
