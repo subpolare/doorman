@@ -626,25 +626,15 @@ internal class MessageProcessor
         var deletionMessagePart = reason;
         try
         {
-            foreach (var groupId in _config.AllowedChats)
-            { 
-                try
-                { 
-                    await _bot.DeleteMessage(groupId, message.MessageId, cancellationToken: stoppingToken);
-                    deletionMessagePart += ", сообщение удалено. Юзеру дали read-only на 1 день";
-                    await _bot.RestrictChatMember(
-                        groupId,
-                        user!.Id,
-                        new ChatPermissions(false),
-                        untilDate: DateTime.UtcNow.AddMinutes(1440),
-                        cancellationToken: stoppingToken
-                    );
-                }
-                catch (Exception e)
-                {
-                    _logger.LogWarning(e, $"Unable to delete in chat {groupId}");
-                }
-            } 
+            await _bot.DeleteMessage(message.Chat.Id, message.MessageId, cancellationToken: stoppingToken);
+            deletionMessagePart += ", сообщение удалено. Юзеру дали read-only на 1 день";
+            await _bot.RestrictChatMember(
+                message.Chat.Id,
+                user!.Id,
+                new ChatPermissions(false),
+                untilDate: DateTime.UtcNow.AddMinutes(1440),
+                cancellationToken: stoppingToken
+            );
         }
         catch (Exception e)
         {
