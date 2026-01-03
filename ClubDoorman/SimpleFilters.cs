@@ -8,9 +8,9 @@ public static class SimpleFilters
     public static bool HasStopWords(string message) =>
         StopWords.Any(sw => message.Contains(sw, StringComparison.InvariantCultureIgnoreCase));
 
-    private static readonly string[] StopWords = File.ReadAllLines("data/ban-words.txt");
+    private static readonly string[] BanWords = File.ReadAllLines("data/ban-words.txt");
     public static bool HasBanWords(string message) =>
-        StopWords.Any(sw => message.Contains(sw, StringComparison.InvariantCultureIgnoreCase));
+        BanWords.Any(sw => message.Contains(sw, StringComparison.InvariantCultureIgnoreCase));
 
     // public static bool TooManyEmojis(string message) => message.Where(IsEmoji).Count() >= 10;
 
