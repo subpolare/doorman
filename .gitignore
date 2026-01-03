@@ -9,7 +9,7 @@ ClubDoorman/ClubDoorman.csproj.user
 
 ClubDoorman/data/app*
 ClubDoorman/data/spam-ham.txt
-ClubDoorman/data/stop-regex.txt 
 ClubDoorman/data/stop-words.txt
+ClubDoorman/data/ban-words.txt
 
 .DS_Store
