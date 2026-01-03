@@ -277,7 +277,7 @@ internal class AdminCommandHandler
                         var lookAlikeMsg = lookalike.Count == 0 ? "отсутствуют" : string.Join(", ", lookalike);
                         var msg =
                             $"Много эмодзи: {emojis}{Environment.NewLine}"
-                            + $"Найдены стоп-слова: {hasStopWords} (regex: {regexStopWords}){Environment.NewLine}"
+                            + $"Найдены стоп-слова: {hasStopWords}{Environment.NewLine}"
                             + $"Маскирующиеся слова: {lookAlikeMsg}{Environment.NewLine}"
                             + $"AI-классификатор спама: {spam} (score: {score}){Environment.NewLine}{Environment.NewLine}"
                             + $"Нормализованный текст: {normalized}";
