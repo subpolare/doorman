@@ -5,58 +5,26 @@ using System.Text.RegularExpressions;
 public static class SimpleFilters
 {
     private static readonly string[] StopWords = File.ReadAllLines("data/stop-words.txt");
-    private static readonly Regex[] StopWordRegexes = LoadStopWordRegexes();
+    public static bool HasStopWords(string message) =>
+        StopWords.Any(sw => message.Contains(sw, StringComparison.InvariantCultureIgnoreCase));
 
-    public static bool HasStopWords(string message) => HasStopWords(message, out _);
+    private static readonly string[] StopWords = File.ReadAllLines("data/ban-words.txt");
+    public static bool HasBanWords(string message) =>
+        StopWords.Any(sw => message.Contains(sw, StringComparison.InvariantCultureIgnoreCase));
 
-    public static bool HasStopWords(string message, out bool matchedRegex)
+    // public static bool TooManyEmojis(string message) => message.Where(IsEmoji).Count() >= 10;
+
+    public static bool TooManyEmojis(string message)
     {
-        matchedRegex = false;
-        if (string.IsNullOrEmpty(message))
-            return false;
-
-        if (StopWords.Any(sw => message.Contains(sw, StringComparison.InvariantCultureIgnoreCase)))
+        var (emojis, total) = CountEmojis(message);
+        if (emojis / total >= 0.04)
             return true;
 
-        foreach (var regex in StopWordRegexes)
-        {
-            if (!regex.IsMatch(message))
-                continue;
-            matchedRegex = true;
+        if (emojis > 10 && total < 150)
             return true;
-        }
 
         return false;
     }
-
-    private static Regex[] LoadStopWordRegexes()
-    {
-        const string path = "data/stop-regex.txt";
-        if (!File.Exists(path))
-            return Array.Empty<Regex>();
-
-        var regexes = new List<Regex>();
-        foreach (var line in File.ReadAllLines(path))
-        {
-            var trimmed = line.Trim();
-            if (string.IsNullOrEmpty(trimmed) || trimmed.StartsWith('#'))
-                continue;
-            try
-            {
-                regexes.Add(new Regex(trimmed, RegexOptions.Compiled | RegexOptions.CultureInvariant | RegexOptions.IgnoreCase));
-            }
-            catch (ArgumentException)
-            {
-                // Ignore invalid regex patterns
-            }
-        }
-
-        return regexes.ToArray();
-    }
-
-    public static bool TooManyEmojis(string message) => message.Where(IsEmoji).Count() >= 10;
-
-    private static bool IsEmoji(char character) => character is >= '\uD800' and <= '\uDFFF' or >= '\u2600' and <= '\u27BF';
 
     public static List<string> FindAllRussianWordsWithLookalikeSymbols(string message) =>
         TextProcessor

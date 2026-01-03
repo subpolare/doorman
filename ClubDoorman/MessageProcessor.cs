@@ -340,16 +340,16 @@ internal class MessageProcessor
             }
             return;
         }
-
-        if (SimpleFilters.HasStopWords(normalized, out var regexStopWord))
+        if (SimpleFilters.HasBanWords(normalized))
         {
-            var reason = regexStopWord
-                ? "Это сообщение совпало с regex-правилом из списка стоп-слов"
-                : "В этом сообщении есть стоп-слова";
-            if (regexStopWord)
-                await AutoBan(message, reason, stoppingToken);
-            else
-                await DeleteAndReportMessage(message, reason, stoppingToken);
+            const string reason = "В этом сообщении есть бан-слова";
+            await AutoBan(message, reason, stoppingToken);
+            return;
+        }
+        if (SimpleFilters.HasStopWords(normalized))
+        {
+            const string reason = "В этом сообщении есть стоп-слова";
+            await DeleteAndReportMessage(message, reason, stoppingToken);
             return;
         }
         _logger.LogDebug("Normalized:\n {Norm}", normalized);
@@ -515,7 +515,7 @@ internal class MessageProcessor
             var forward = await _bot.ForwardMessage(admChat, chat.Id, message.MessageId, cancellationToken: stoppingToken);
             await _bot.SendMessage(
                 admChat,
-                $"Авто-бан: {reason}{Environment.NewLine}Юзер {fullName} из чата {chat.Title}{Environment.NewLine}{Utils.LinkToMessage(chat, message.MessageId)}",
+                $"Автобан: {reason}{Environment.NewLine}{Environment.NewLine}Юзер {fullName} из чата {chat.Title}{Environment.NewLine}{Utils.LinkToMessage(chat, message.MessageId)}",
                 replyParameters: forward,
                 cancellationToken: stoppingToken
             );
