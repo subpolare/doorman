@@ -26,6 +26,72 @@ public static class SimpleFilters
         return false;
     }
 
+    public static bool JustOneEmoji(string message)
+    {
+        if (message.Length > 4)
+            return false;
+        var (emojis, total) = CountEmojis(message);
+        return total == 1 && emojis == total;
+    }
+
+    private static (int emoji, int total) CountEmojis(string text)
+    {
+        var enumerator = StringInfo.GetTextElementEnumerator(text);
+        var emoji = 0;
+        var total = 0;
+        while (enumerator.MoveNext())
+        {
+            total++;
+            var element = enumerator.GetTextElement();
+            if (IsEmojiTextElement(element))
+                emoji++;
+        }
+
+        return (emoji, total);
+    }
+
+    private static bool IsEmojiTextElement(string textElement)
+    {
+        foreach (var rune in textElement.EnumerateRunes())
+        {
+            int value = rune.Value;
+
+            // Comprehensive emoji ranges
+            if (
+                (value >= 0x1F600 && value <= 0x1F64F)
+                || // Emoticons
+                (value >= 0x1F300 && value <= 0x1F5FF)
+                || // Misc Symbols and Pictographs
+                (value >= 0x1F680 && value <= 0x1F6FF)
+                || // Transport and Map
+                (value >= 0x1F1E6 && value <= 0x1F1FF)
+                || // Regional indicator symbols
+                (value >= 0x2600 && value <= 0x27BF)
+                || // Misc symbols
+                (value >= 0x2700 && value <= 0x27BF)
+                || // Dingbats
+                (value >= 0x1F900 && value <= 0x1F9FF)
+                || // Supplemental Symbols and Pictographs
+                (value >= 0x1FA00 && value <= 0x1FA6F)
+                || // Extended-A
+                (value >= 0x1FA70 && value <= 0x1FAFF)
+                || // Extended-B
+                (value >= 0xFE00 && value <= 0xFE0F)
+                || // Variation selectors
+                (value >= 0x2300 && value <= 0x23FF)
+                || // Misc Technical
+                (value >= 0x2B50 && value <= 0x2B50)
+                || // Star
+                (value >= 0x200D && value <= 0x200D)
+            ) // Zero width joiner
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static List<string> FindAllRussianWordsWithLookalikeSymbols(string message) =>
         TextProcessor
             .NormalizeText(message)
