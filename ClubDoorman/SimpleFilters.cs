@@ -19,6 +19,9 @@ public static class SimpleFilters
     public static bool TooManyEmojis(string message)
     {
         var (emojis, total) = CountEmojis(message);
+        if (emojis <= 8 && total < 150)
+            return false;
+
         if (emojis / total >= 0.04)
             return true;
 
