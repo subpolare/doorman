@@ -594,7 +594,7 @@ internal class MessageProcessor
         var callbackData = fromChat == null ? $"ban_{message.Chat.Id}_{user.Id}" : $"banchan_{message.Chat.Id}_{fromChat.Id}";
 
         var postLink = Utils.LinkToMessage(message.Chat, message.MessageId);
-        var reply = "";
+        // var reply = "";
         // if (message.ReplyToMessage != null)
         //     reply = $"{Environment.NewLine}Реплай на {Utils.LinkToMessage(message.Chat, message.ReplyToMessage.MessageId)}";
 
