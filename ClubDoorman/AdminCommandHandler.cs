@@ -272,7 +272,7 @@ internal class AdminCommandHandler
                         var emojis = SimpleFilters.TooManyEmojis(text);
                         var normalized = TextProcessor.NormalizeText(text);
                         var lookalike = SimpleFilters.FindAllRussianWordsWithLookalikeSymbolsInNormalizedText(normalized);
-                        var hasStopWords = SimpleFilters.HasStopWords(normalized, out var regexStopWords);
+                        var hasStopWords = SimpleFilters.HasStopWords(normalized);
                         var (spam, score) = await _classifier.IsSpam(normalized);
                         var lookAlikeMsg = lookalike.Count == 0 ? "отсутствуют" : string.Join(", ", lookalike);
                         var msg =
