@@ -218,7 +218,7 @@ public static class SimpleFilters
     }
 
     private static bool AllowedNonRussianCyrillicOrDigit(char c) =>
-        c == 'ё' || c == 'ë' || c == 'i' || c == 'і' || c == 'ћ' || c == 'є' || c == 'љ' || c == 'њ' || c == 'ј' || (c >= '0' && c <= '9');
+        c == 'ё' || c == 'ë' || c == 'i' || c == 'і' || c == 'ћ' || c == 'є' || c == 'љ' || c = 'а́' || c = 'е́' || c = 'и́' || c = 'о́' || c = 'у́' || c = 'ы́' || c = 'э́' || c = 'ю́' || c = 'я́' || c = 'А́' || c = 'Е́' || c = 'И́' || c = 'О́' || c = 'У́' || c = 'Ы́' || c = 'Э́' || c = 'Ю́' || c = 'Я́' || c == 'њ' || c == 'ј' || (c >= '0' && c <= '9');
 
     private static bool IsCyrillicLowercase(char c) => c is >= 'а' and <= 'я';
 }
