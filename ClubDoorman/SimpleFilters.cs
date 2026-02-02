@@ -217,12 +217,11 @@ public static class SimpleFilters
         return false;
     }
 
-    static bool AllowedNonRussianCyrillicOrDigit(string te) =>
-        te is "ё" or "ë" or "i" or "і" or "ћ" or "є" or "љ"
-        or "а\u0301" or "е\u0301" or "и\u0301" or "о\u0301" or "у\u0301" or "ы\u0301" or "э\u0301" or "ю\u0301" or "я\u0301"
-        or "А\u0301" or "Е\u0301" or "И\u0301" or "О\u0301" or "У\u0301" or "Ы\u0301" or "Э\u0301" or "Ю\u0301" or "Я\u0301"
-        or "њ" or "ј"
-        || (te.Length == 1 && te[0] >= '0' && te[0] <= '9');
-
+    private static bool AllowedNonRussianCyrillicOrDigit(char c) =>
+        c == 'ё' || c == 'ë' || c == 'i' || c == 'і' || c == 'ћ' || c == 'є' || c == 'љ'
+        || c == 'њ' || c == 'ј'
+        || c == '\u0301'
+        || (c >= '0' && c <= '9');
+        
     private static bool IsCyrillicLowercase(char c) => c is >= 'а' and <= 'я';
 }
