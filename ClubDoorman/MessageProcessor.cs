@@ -648,8 +648,8 @@ internal class MessageProcessor
         var callbackDataBan = fromChat == null ? $"ban_{message.Chat.Id}_{user.Id}" : $"banchan_{message.Chat.Id}_{fromChat.Id}";
         var postLink = Utils.LinkToMessage(message.Chat, message.MessageId);
         var reply = "";
-        // if (message.ReplyToMessage != null)
-        //     reply = $"{Environment.NewLine}реплай на {Utils.LinkToMessage(message.Chat, message.ReplyToMessage.MessageId)}";
+        if (message.ReplyToMessage != null)
+            reply = $"{Environment.NewLine}Ответ на {Utils.LinkToMessage(message.Chat, message.ReplyToMessage.MessageId)}";
 
         var rows = new List<InlineKeyboardButton[]>
         {

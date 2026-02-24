@@ -28,14 +28,14 @@ internal sealed class UserManager
 
     private const string Path = "data/approved-users.txt";
     private readonly SemaphoreSlim _semaphore = new(1);
-    // private readonly HashSet<long> _approved = [.. File.ReadAllLines(Path).Select(long.Parse)];
-    private readonly HashSet<long> _approved = new();
+    private readonly HashSet<long> _approved = [.. File.ReadAllLines(Path).Select(long.Parse)];
+    // private readonly HashSet<long> _approved = new();
 
     private readonly HttpClient _clubHttpClient = new();
     private readonly HttpClient _httpClient = new();
 
-    // public bool Approved(long userId) => _approved.Contains(userId);
-    public bool Approved(long userId) => false;
+    public bool Approved(long userId) => _approved.Contains(userId);
+    // public bool Approved(long userId) => false;
 
     private async Task InjestChatHistories()
     {
@@ -93,11 +93,11 @@ internal sealed class UserManager
 
     public async ValueTask Approve(long userId)
     {
-        // if (_approved.Add(userId))
-        // {
-        //    using var token = await SemaphoreHelper.AwaitAsync(_semaphore);
-        //    await File.AppendAllLinesAsync(Path, [userId.ToString(CultureInfo.InvariantCulture)]);
-        // }
+        if (_approved.Add(userId))
+        {
+           using var token = await SemaphoreHelper.AwaitAsync(_semaphore);
+           await File.AppendAllLinesAsync(Path, [userId.ToString(CultureInfo.InvariantCulture)]);
+        }
 	
 	_approved.Add(userId);
 	await ValueTask.CompletedTask;
