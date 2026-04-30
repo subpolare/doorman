@@ -101,8 +101,24 @@ internal class MessageProcessor
             );
             return;
         }
-        if (!_config.IsAllowedChat(chat.Id) && chat.Id != _config.AdminChatId && !_config.MultiAdminChatMap.Values.Contains(chat.Id))
+        if (!_config.IsAllowedChat(chat.Id) &&
+            chat.Id != _config.AdminChatId &&
+            !_config.MultiAdminChatMap.Values.Contains(chat.Id))
         {
+            await _bot.SendMessage(
+                chat.Id,
+                "Я работаю только в определённых чатах",
+                replyParameters: message,
+                cancellationToken: stoppingToken);
+
+            var chatName = string.IsNullOrWhiteSpace(chat.Title) ? chat.Id.ToString() : chat.Title;
+            var report = $"Меня используют в чате {chatName} ({chat.Id}), спамлю им в ответ";
+
+            await _bot.SendMessage(
+                _config.AdminChatId,
+                report,
+                cancellationToken: stoppingToken);
+
             return;
         }
         if (message.NewChatMembers != null && chat.Id != _config.AdminChatId && !_config.MultiAdminChatMap.Values.Contains(chat.Id))
